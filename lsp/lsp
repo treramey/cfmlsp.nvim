@@ -24,7 +24,7 @@ fi
 
 # Give the option to query the current version
 if [[ -n "$1" && "$1" =~ ^(-v|--version)$ ]]; then
-	cat ./lsp.version
+	cat "$currentDirectory/lsp.version"
 	exit 0
 fi
 
