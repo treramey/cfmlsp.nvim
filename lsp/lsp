@@ -19,7 +19,14 @@ if (( $JAVA_VERSION < $MIN_JAVA_VERSION )) ; then
 	exit 1
 fi
 
+# Get the latest libraries
 "$currentDirectory/update_libs.sh"
+
+# Give the option to query the current version
+if [[ -n "$1" && "$1" =~ ^(-v|--version)$ ]]; then
+	cat "$currentDirectory/lsp.version"
+	exit 0
+fi
 
 # If a port is given, use that one
 if [[ -n "$1" && "$1" =~ ^[1-9][0-9]*$ ]]; then
