@@ -6,16 +6,19 @@ if not package.loaded["lspconfig"] then
 	return {}
 end
 
-if not package.loaded["cmp_nvim_lsp"] then
-	print("This plugin needs 'hrsh7th/cmp-nvim-lsp' to work.")
-	return {}
-end
-
-
 local lspconfig = require("lspconfig")
 local configs = require("lspconfig.configs")
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+-- Define capabilities without cmp_nvim_lsp dependency
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+	properties = {
+		"documentation",
+		"detail",
+		"additionalTextEdits",
+	},
+}
 
 -- Helper functions
 
@@ -36,15 +39,14 @@ local system_execute = function(command)
 	return result
 end
 
-
 -- The main setup function
 function C.setup()
 	-- Add cfml filetypes
 	vim.filetype.add({
 		extension = {
 			cfm = "cfml",
-			cfc = "cfml",
-			cfs = "cfml",
+			cfc = "cfscript",
+			cfs = "cfscript",
 		},
 	})
 
@@ -55,7 +57,7 @@ function C.setup()
 			default_config = {
 				cmd = { lsp_dir .. "/lsp" },
 				root_dir = lspconfig.util.root_pattern(".git", ".config"),
-				filetypes = { "cfml" },
+				filetypes = { "cfml", "cfscript" },
 				on_new_config = function(new_config, new_root_dir)
 					local source_config_path = lsp_dir .. "/profile.xml"
 					local target_config_path = new_root_dir .. "/.cfmlsp"
