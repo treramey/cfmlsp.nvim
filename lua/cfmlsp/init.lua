@@ -9,8 +9,12 @@ end
 local lspconfig = require("lspconfig")
 local configs = require("lspconfig.configs")
 
--- Define capabilities without cmp_nvim_lsp dependency
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities
+if vim.fn.has("nvim-0.11") == 1 then
+	capabilities = vim.lsp.protocol.make_client_capabilities()
+else
+	capabilities = vim.lsp.protocol.make_client_capabilities()
+end
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.resolveSupport = {
 	properties = {
@@ -19,8 +23,6 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 		"additionalTextEdits",
 	},
 }
-
--- Helper functions
 
 local get_plugin_path = function()
 	local current_file = debug.getinfo(1).source:sub(2)
@@ -42,13 +44,21 @@ end
 -- The main setup function
 function C.setup()
 	-- Add cfml filetypes
-	vim.filetype.add({
-		extension = {
-			cfm = "cfml",
-			cfc = "cfscript",
-			cfs = "cfscript",
-		},
-	})
+	if vim.filetype and vim.filetype.add then
+		vim.filetype.add({
+			extension = {
+				cfm = "cfml",
+				cfc = "cfscript",
+				cfs = "cfscript",
+			},
+		})
+	else
+		vim.cmd([[
+			autocmd BufRead,BufNewFile *.cfm setfiletype cfml
+			autocmd BufRead,BufNewFile *.cfc setfiletype cfscript
+			autocmd BufRead,BufNewFile *.cfs setfiletype cfscript
+		]])
+	end
 
 	local lsp_dir = get_plugin_path() .. "lsp"
 
