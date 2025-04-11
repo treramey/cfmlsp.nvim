@@ -24,7 +24,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 	},
 }
 capabilities.textDocument.definition = {
-	dynamicRegistration = false,
+	dynamicRegistration = true,
 	linkSupport = true
 }
 
