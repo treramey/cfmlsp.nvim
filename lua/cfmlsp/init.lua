@@ -23,6 +23,10 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 		"additionalTextEdits",
 	},
 }
+capabilities.textDocument.definition = {
+	dynamicRegistration = false,
+	linkSupport = true
+}
 
 local get_plugin_path = function()
 	local current_file = debug.getinfo(1).source:sub(2)
